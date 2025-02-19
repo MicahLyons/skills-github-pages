@@ -1,4 +1,4 @@
 ---
-title: Welcome to my blog
+title: Micah Lyons - Project Repository
 ---
 
