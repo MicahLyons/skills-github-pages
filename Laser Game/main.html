@@ -1,0 +1,364 @@
+<html lang="en"><head><style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    color: white;
+  }
+
+  body {
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  canvas {
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    background: #212121;
+  }
+  #scoreboard {
+    position: fixed;
+    top: 60px;
+    color: lightgray;
+    left: 405px;
+    font-size: 50px;
+    font-family: 'Arial black';
+  }
+  #volumeSlider {
+    position: fixed;
+    top: 25px;
+    left: 50px;
+  }
+  #volumeText {
+    position: fixed;
+    top: 3px;
+    left: 260px;
+    font-family: 'Arial black';
+  }
+  input[type="range"] {
+  margin-right: 15px;
+  width: 200px;
+  height: 7px;
+  background: #212121;
+  border-radius: 5px;
+  background-size: 70% 100%;
+  background-repeat: no-repeat;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #FF0000;
+  cursor: ew-resize;
+  box-shadow: 0 0 2px 0 #555;
+  transition: background .3s ease-in-out;
+}
+
+</style>
+</head><body>
+<button onclick="window.location.href='../index.html'" style="width: 3vw; height: 3vw; background: #AEAEAE; border-radius: .5vw; border: 0px solid #AEAEAE; position: fixed; margin: 1vw; font-size:1vw;">&#x25c0</button>
+<canvas width="800" height="400" id="game"></canvas>
+<div id="scoreboard">0</div>
+<input type="range" id="volumeSlider" min="0" max="1" step=".01" value="1">
+<p id="volumeText">
+Volume
+</p>
+<script>
+  const canvas = document.getElementById('game');
+  const context = canvas.getContext('2d');
+  const ballContext = canvas.getContext('2d');
+  const grid = 10;
+
+  var ballSpeed = 0;
+  var enemySpeed = 2;
+
+  let laser = new Audio('https://od.lk/s/OThfMzc0NDAyMTRf/laserShoot.wav');
+  let kaboom = new Audio('https://od.lk/s/OThfMzc0NDAyMTNf/explosion.wav');
+  let kaboom2 = new Audio('https://od.lk/s/OThfMzc0NDAyMjJf/explosion%20%281%29.wav')
+  let music = new Audio('https://od.lk/s/OThfMzc5MDQ2NjJf/02_In-Game.mp3')
+
+
+  const ball = {
+    // start in the middle of the game
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    width: grid,
+    height: grid,
+    angle:-45,
+    resetting: false,
+    dx: ballSpeed,
+    dy: -ballSpeed,
+    color: 'white',
+    fireable: true,
+    score: 0,
+  };
+  const enemy = {
+    x: 0,
+    y: 0,
+    width: grid,
+    height: grid,
+    angle:-45,
+    resetting: false,
+    dx: 0,
+    dy: 0,
+    dturn: 0,
+    color: 'red',
+  }
+  const enemy2 = {
+    x: canvas.width-grid,
+    y: 0,
+    width: grid,
+    height: grid,
+    angle:-220,
+    resetting: false,
+    dx: 0,
+    dy: 0,
+    dturn: 0,
+    color: 'red',
+  }
+  const enemy3 = {
+    x: 0,
+    y: canvas.height-grid,
+    width: grid,
+    height: grid,
+    angle:45,
+    resetting: false,
+    dx: 0,
+    dy: 0,
+    dturn: 0,
+    color: 'red',
+  }
+  const enemy4 = {
+    x: canvas.width-grid,
+    y: canvas.height-grid,
+    width: grid,
+    height: grid,
+    angle: 135,
+    resetting: false,
+    dx: 0,
+    dy: 0,
+    dturn: 0,
+    color: 'red',
+  }
+
+
+  function loop() { // game loop
+    requestAnimationFrame(loop);
+    context.clearRect(ball.x-1,ball.y-1,ball.width+2,ball.height+2);
+    context.clearRect(enemy.x-1,enemy.y-1,enemy.width+2,enemy.height+2);
+    context.clearRect(enemy2.x-1,enemy2.y-1,enemy2.width+2,enemy2.height+2);
+    context.clearRect(enemy3.x-1,enemy3.y-1,enemy3.width+2,enemy3.height+2);
+    context.clearRect(enemy4.x-1,enemy4.y-1,enemy4.width+2,enemy4.height+2);
+
+    // move ball
+    ball.dx = ballSpeed * Math.cos(ball.angle*Math.PI/180)
+    ball.dy = -ballSpeed * Math.sin(ball.angle*Math.PI/180)
+    ball.x += ball.dx;
+    ball.y += ball.dy;
+    ballSpeed -= 1/10;
+    if (ballSpeed <= 0) {ballSpeed = 0}
+
+    // move enemy
+    enemy.dx = (ball.x-enemy.x)/75
+    enemy.dy = (ball.y-enemy.y)/75
+    enemy.x += enemy.dx;
+    enemy.y += enemy.dy;
+    context.fillStyle = enemy.color;
+    context.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+    // move enemy2
+    enemy2.dx = (ball.x-enemy2.x)/75
+    enemy2.dy = (ball.y-enemy2.y)/75
+    enemy2.x += enemy2.dx;
+    enemy2.y += enemy2.dy;
+    context.fillStyle = enemy2.color;
+    context.fillRect(enemy2.x, enemy2.y, enemy2.width, enemy2.height);
+    // move enemy3
+    enemy3.dx = (ball.x-enemy3.x)/75
+    enemy3.dy = (ball.y-enemy3.y)/75
+    enemy3.x += enemy3.dx;
+    enemy3.y += enemy3.dy;
+    context.fillStyle = enemy3.color;
+    context.fillRect(enemy3.x, enemy3.y, enemy3.width, enemy3.height);
+    // move enemy4
+    enemy4.dx = (ball.x-enemy4.x)/75
+    enemy4.dy = (ball.y-enemy4.y)/75
+    enemy4.x += enemy4.dx;
+    enemy4.y += enemy4.dy;
+    context.fillStyle = enemy4.color;
+    context.fillRect(enemy4.x, enemy4.y, enemy4.width, enemy4.height);
+
+    //reset ball
+    if ((ball.x < 0 || ball.x > canvas.width || ball.y < 0 || ball.y > canvas.height) && !ball.resetting) {
+      resetBall();
+    }
+    if ((Math.abs(enemy.x-ball.x) <= grid) && Math.abs(enemy.y-ball.y) <= grid) {
+      resetBall();
+    }
+    if ((Math.abs(enemy2.x-ball.x) <= grid) && Math.abs(enemy2.y-ball.y) <= grid) {
+      resetBall();
+    }
+    if ((Math.abs(enemy3.x-ball.x) <= grid) && Math.abs(enemy3.y-ball.y) <= grid) {
+      resetBall();
+    }
+    if ((Math.abs(enemy4.x-ball.x) <= grid) && Math.abs(enemy4.y-ball.y) <= grid) {
+      resetBall();
+    }
+		
+    //update volume
+    kaboom2.volume = 1/3 * document.getElementById('volumeSlider').value
+    kaboom.volume = 1/3 * document.getElementById('volumeSlider').value
+    laser.volume = 1/3 * document.getElementById('volumeSlider').value
+    music.volume = 1/3 * document.getElementById('volumeSlider').value
+    
+    //update score
+    document.getElementById('scoreboard').innerHTML = (ball.score)
+
+    // draw ball and enemy
+    context.fillStyle = ball.color;
+    context.fillRect(ball.x, ball.y, ball.width, ball.height);
+  }
+
+  //move ball on click
+  document.addEventListener('click', function(e) {
+    if (ball.fireable == true) {
+    var cursorX = e.pageX-50;
+    var cursorY = e.pageY-50;
+    ball.angle = 180*(Math.atan2((cursorY-(ball.y+ball.height/2)),(ball.x+ball.width/2-cursorX)))/Math.PI
+    detectHit()
+    detectHit2()
+    detectHit3()
+    detectHit4()
+    ballSpeed = 5
+    drawLine(context, ball.x+7.5, ball.y+7.5, cursorX-800*Math.cos(-Math.PI*ball.angle/180), cursorY-800*Math.sin(-Math.PI*ball.angle/180), 'yellow', 5);
+    laser.play();
+    ball.fireable = false;
+    setTimeout(() => {
+      ball.fireable = true;
+    }, 300);
+    }
+
+  });
+
+  function drawLine(ctx, x1, y1, x2,y2, stroke, width) { //show laser
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = width;
+          ctx.stroke();
+          ctx.closePath();
+          setTimeout(() => {
+            context.clearRect(0,0,canvas.width,canvas.height);
+          }, 200);
+        }
+  function cap(variable,min,max) { //set minimum and maximum values for a variable
+    if (variable > max) {variable = max}
+    if (variable < min) {variable = min}
+  }
+  function resetBall() {
+    ball.resetting = true;
+      setTimeout(() => {
+        ball.resetting = false;
+        ball.x = canvas.width / 2;
+        ball.y = canvas.height / 2;
+        ballSpeed = 0;
+        context.clearRect(0,0,canvas.width,canvas.height);
+        resetEnemy();
+        resetEnemy2();
+        resetEnemy3();
+        resetEnemy4();
+        ball.score = 0
+        kaboom2.play()
+      }, 400);
+  }
+  function detectHit() { //check if laser hits enemy
+    var a = Math.PI*-ball.angle/180
+    var d = 15
+    var x = enemy.x-ball.x
+    var maximumY = ball.y+x*Math.tan(a)+(d/Math.abs(Math.cos(a)))
+    var minimumY = ball.y+x*Math.tan(a)-(d/Math.abs(Math.cos(a)))
+    if (minimumY+2.5 <= enemy.y + 7.5 && enemy.y + 7.5 <= maximumY+2.5
+        && Math.cos(a)/x <= 0) {
+      resetEnemy();
+      ball.score+=1;
+      kaboom.currentTime = 0
+      kaboom.play()
+      return(true)
+    }
+  }
+  function detectHit2() { //check if laser hits enemy2
+    var a2 = Math.PI*-ball.angle/180
+    var d2 = 15
+    var x2 = enemy2.x-ball.x
+    var maximumY2 = ball.y+x2*Math.tan(a2)+(d2/Math.abs(Math.cos(a2)))
+    var minimumY2 = ball.y+x2*Math.tan(a2)-(d2/Math.abs(Math.cos(a2)))
+    if (minimumY2+2.5 <= enemy2.y + 7.5 && enemy2.y + 7.5 <= maximumY2+2.5
+        && Math.cos(a2)/x2 <= 0) {
+      resetEnemy2();
+      ball.score+=1;
+      kaboom.currentTime = 0
+      kaboom.play()
+      return(true)
+    }
+  }
+  function detectHit3() { //check if laser hits enemy2
+    var a3 = Math.PI*-ball.angle/180
+    var d3 = 15
+    var x3 = enemy3.x-ball.x
+    var maximumY3 = ball.y+x3*Math.tan(a3)+(d3/Math.abs(Math.cos(a3)))
+    var minimumY3 = ball.y+x3*Math.tan(a3)-(d3/Math.abs(Math.cos(a3)))
+    if (minimumY3+2.5 <= enemy3.y + 7.5 && enemy3.y + 7.5 <= maximumY3+2.5
+        && Math.cos(a3)/x3 <= 0) {
+      resetEnemy3();
+      ball.score+=1;
+      kaboom.currentTime = 0
+      kaboom.play()
+      return(true)
+    }
+  }
+  function detectHit4() { //check if laser hits enemy2
+    var a4 = Math.PI*-ball.angle/180
+    var d4 = 15
+    var x4 = enemy4.x-ball.x
+    var maximumY4 = ball.y+x4*Math.tan(a4)+(d4/Math.abs(Math.cos(a4)))
+    var minimumY4 = ball.y+x4*Math.tan(a4)-(d4/Math.abs(Math.cos(a4)))
+    if (minimumY4+2.5 <= enemy4.y + 7.5 && enemy4.y + 7.5 <= maximumY4+2.5
+        && Math.cos(a4)/x4 <= 0) {
+      resetEnemy4();
+      ball.score+=1;
+      kaboom.currentTime = 0
+      kaboom.play()
+      return(true)
+    }
+  }
+  function resetEnemy() {
+    enemy.x = 0
+    enemy.y = 0
+  }
+  function resetEnemy2() {
+    enemy2.x = canvas.width-grid
+    enemy2.y = 0
+  }
+  function resetEnemy3() {
+    enemy3.x = 0
+    enemy3.y = canvas.height-grid
+  }
+  function resetEnemy4() {
+    enemy4.x = canvas.width-grid
+    enemy4.y = canvas.height-grid
+  }
+  // start the game
+  requestAnimationFrame(loop);
+  music.play();
+  music.loop = true;
+  
+</script>
+
+
+  
+
+
+</body></html>

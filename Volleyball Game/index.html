@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Gaming</title>
+        <style>
+            body {
+                background-color: black;
+                margin: 0px
+            }
+            canvas {
+                background-color: #2f94e6;
+            }
+        </style>
+    </head>
+    <body onload="requestAnimationFrame(loop)">
+        <button onclick="window.location.href='../index.html'" style="width: 3vw; height: 3vw; background: #AEAEAE; border-radius: .5vw; border: 0px solid #AEAEAE; position: fixed; margin: 1vw; font-size:1vw;">&#x25c0</button>
+        <img hidden src="ball.png" id="ball">
+        <img hidden src="beachball.png" id="beachball">
+        <img hidden src="volleyball.png" id="volleyball">
+        <img hidden src="oldman1.jpg" id="p1">
+        <img hidden src="oldman2.jpg" id="p2">
+        <img hidden src="sunset.jpg" id="background">
+        <img hidden src="clouds.png" id="clouds">
+        <img hidden src="clouds2.png" id="clouds2">
+        <center><canvas id="canvas" width="2400px" height="1500px"></canvas></center>
+
+        <img hidden src="Characters/Blue Shorts Guy/bump 1.png" id="blu_b1">
+        <img hidden src="Characters/Blue Shorts Guy/bump 2.png" id="blu_b2">
+        <img hidden src="Characters/Blue Shorts Guy/set 1.png" id="blu_s1">
+        <img hidden src="Characters/Blue Shorts Guy/set 2.png" id="blu_s2">
+        <img hidden src="Characters/Blue Shorts Guy/serve.png" id="blu_srv">
+        
+        <audio hidden src="Audio/groundbounce.wav" id="groundBounce"></audio>
+        <audio hidden src="Audio/hit.wav" id="hit"></audio>
+        <audio hidden src="Audio/net.wav" id="net"></audio>
+        <audio hidden src="Audio/boing.mp3" id="boing"></audio>
+        <audio hidden src="Audio/eliminator.mp3" id="eliminator"></audio>
+        <script src="gaming.js"></script>
+    </body>
+</html>

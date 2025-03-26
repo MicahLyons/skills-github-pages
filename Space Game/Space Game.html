@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+	<title>Space Game</title>
+	<style>
+		body {
+			margin: 0px;
+			background-color: black;
+		}
+
+		canvas {
+			background-color: #232323;
+			font-family: 'Orbitron', sans-serif;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+		}
+	</style>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+	<link href="https://fonts.googleapis.com/css2?family=Orbitron&amp;display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <button onclick="window.location.href='../index.html'" style="width: 3vw; height: 3vw; background: #AEAEAE; border-radius: .5vw; border: 0px solid #AEAEAE; position: fixed; margin: 1vw; font-size:1vw; z-index: 10;">&#x25c0</button>
+	<center><canvas id="canvas"></canvas></center>
+	<script>
+		const cvs = document.getElementById('canvas');
+        const ctx = cvs.getContext('2d');
+        let gameRunning = true;
+        let score = 0;
+        
+        cvs.width = window.innerWidth * 2
+        cvs.height = window.innerHeight * 2
+        cvs.style.width = '100vw';
+        cvs.style.height = '100vh';
+        
+        let cw = cvs.width;
+        let ch = cvs.height;
+        const tau = 2 * Math.PI;
+        
+        let orb = {
+            r: 150, //radius
+            da: .03, //angular velocity
+            a: 0, //angle of barrier 1
+            a2: Math.PI, //angle of barrier 2
+            direction: 'clockwise',
+            draw: (function() {
+                if (this.direction == 'clockwise') { //Rotate Barrier
+                    this.a += this.da
+                } if (this.direction == 'counterclockwise') {
+                    this.a -= this.da
+                }
+                if (this.a <= Math.PI) { //Calculate angle of 2nd barrier
+                    this.a2 = this.a + Math.PI
+                } else if (this.a >= Math.PI) {
+                    this.a2 = this.a - Math.PI
+                }
+
+                ctx.beginPath(); //Orbit
+                ctx.strokeStyle = 'gray';
+                ctx.lineWidth = 1
+                ctx.arc(cw/2,ch/2,this.r + 20,0,tau);
+                ctx.stroke();
+                
+                ctx.beginPath(); //Barrier
+                ctx.strokeStyle = '#007AF0A0';
+                ctx.lineWidth = 8
+                ctx.arc(cw/2,ch/2,this.r + 20,this.a-.4,this.a+.4);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(cw/2,ch/2,this.r + 20,this.a2-.4,this.a2+.4);
+                ctx.stroke();
+                
+                ctx.beginPath(); //Outer Circle
+                ctx.fillStyle = 'gray';
+                ctx.arc(cw/2,ch/2,this.r,0,tau);
+                ctx.fill();
+                
+                ctx.beginPath(); //Inner Circle
+                ctx.fillStyle = '#AAAAAA';
+                ctx.arc(cw/2,ch/2,(this.r-25)/2+25,0,tau);
+                ctx.fill();
+                
+                ctx.beginPath(); //Inner Inner Circle
+                ctx.fillStyle = '#DDDDDD';
+                ctx.arc(cw/2,ch/2,(this.r-25)/4+25,0,tau);
+                ctx.fill();
+                
+                ctx.beginPath(); //Inner Inner Inner Circle
+                ctx.fillStyle = 'white';
+                ctx.arc(cw/2,ch/2,25,0,tau);
+                ctx.fill();
+                
+                if (this.a <= 0 && this.direction == 'counterclockwise') {
+                    this.a = tau
+                }
+                if (this.a >= tau && this.direction == 'clockwise') {
+                    this.a = 0
+                }
+                
+                this.hp = (this.r - 25)/5
+                if (this.hp <= 0) {
+                    gameRunning = false
+                }
+            }),
+               
+        }
+        
+        const enemies = [];
+        function Enemy(a,r) {
+            this.a = a;
+            this.r = r/2;
+            this.exploding = false;
+            this.explosionRadius = 16;
+            this.explosionOpacity = .84;
+            
+            this.draw = (function() {
+                if (this.exploding == false) {
+                    this.r -= 1;
+                    this.x = cw/2 + this.r * Math.cos(this.a);
+                    this.y = ch/2 + this.r * Math.sin(this.a);
+                
+                    ctx.beginPath();
+                    ctx.fillStyle = 'gray';
+                    ctx.arc(this.x,this.y,15,0,tau);
+                    ctx.fill();
+                    
+                    ctx.beginPath();
+                    ctx.fillStyle = '#007AF0A0';
+                    ctx.arc(this.x,this.y,8,0,tau);
+                    ctx.fill();
+                    
+                    for (var i=0; i<tau; i+=tau/8) {
+                        ctx.beginPath();
+                        ctx.fillStyle = 'lightgray';
+                        ctx.arc(this.x+12*Math.cos(i),this.y+12*Math.sin(i),1,0,tau);
+                        ctx.fill();
+                    }
+                }
+                
+                if (this.exploding) {
+                    if (this.r <= orb.r + 5) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = 'rgba(80%,80%,80%,' + this.explosionOpacity + ')';
+                        ctx.lineWidth = 5
+                        ctx.arc(this.x,this.y,this.explosionRadius,0,tau);
+                        ctx.stroke();
+                    } else {
+                        ctx.beginPath();
+                        ctx.strokeStyle = 'rgba(0,122,240,' + this.explosionOpacity + ')';
+                        ctx.lineWidth = 5
+                        ctx.arc(this.x,this.y,this.explosionRadius,0,tau);
+                        ctx.stroke();
+                    }
+                    if (this.explosionOpacity >= 0) {
+                        this.explosionRadius += 1;
+                        this.explosionOpacity -= .02;
+                    } else {enemies.splice(this,1)}
+                }
+            });
+        }
+        
+        const stars = []
+        function Star(x,y,r) {
+            this.x = x;
+            this.y = y;
+            this.r = r;
+            this.opacity = 1;
+            this.draw = function() {
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(100%,100%,100%,' + this.opacity + ')';
+                ctx.arc(this.x,this.y,2,0,tau);
+                ctx.fill();
+                
+                this.opacity -= .01
+                
+            }
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.which == 65) {
+                orb.direction = 'counterclockwise';
+            }
+            if (e.which == 68) {
+                orb.direction = 'clockwise';
+            }
+        });
+
+        
+        function loop() {
+            ctx.clearRect(0,0,cw,ch);
+            if (stars.length <= 150 && Math.floor(Math.random() * 5) == 0) {
+                var star_x = Math.random() * cw
+                var star_y = Math.random() * ch
+                var star_r = Math.random() * 2 + 1
+                stars.push(new Star(star_x,star_y))
+            }
+            for (var i = 0; i < stars.length; i++) { //draw stars
+                var s = stars[i];
+                var s_num = i;
+                s.draw();
+                if (s.opacity <= 0) {
+                    stars.splice(s_num,1);
+                }
+            }
+            if (gameRunning) {
+                orb.draw(); //draw planet
+                
+                var enemyChance = 120-score;
+                if (enemyChance <= 0) {enemyChance = 0}
+                if (Math.floor(Math.random()*enemyChance) == 0) { //create enemies
+                    var e_angle = Math.random() * tau;
+                    var e_radius = Math.sqrt(cw**2 + ch**2);
+                    enemies.push(new Enemy(e_angle,e_radius));
+                }
+                for (var i = 0; i < enemies.length; i++) { //draw enemies
+                    var e = enemies[i];
+                    var e_num = i;
+                    e.draw();
+                    
+                    //check for collision
+                    if (!e.exploding && e.r <= orb.r + 35 && e.r >= orb.r + 5 && ((e.a <= orb.a + .4 && e.a >= orb.a - .4) || (e.a <= orb.a2 + .4 && e.a >= orb.a2 - .4))) {
+                        e.exploding = true;
+                        var pop = new Audio('pop.mp3');
+                        pop.play();
+                        score++;
+                    }
+                    if (e.r <= orb.r) {
+                        orb.r -= 5;
+                        e.exploding = true;
+                        var pop = new Audio('pop.mp3');
+                        pop.play();
+                    }
+                }
+                //scoreboard,hp
+                ctx.font = "96px Orbitron";
+                ctx.fillStyle = "white";
+                ctx.textAlign = "center";
+                ctx.fillText(score,cw/2,100);
+                ctx.font = "24px Orbitron";
+                ctx.fillStyle = "#007AF0";
+                ctx.textAlign = "center";
+                ctx.fillText(orb.hp,cw/2,ch/2+8);
+                
+            } else { //game over
+                ctx.textAlign = "center";
+                ctx.font = "96px Orbitron";
+                ctx.fillStyle = "white";
+                ctx.fillText("You Lose",cw/2,ch/2);
+                ctx.font = "48px Orbitron";
+                ctx.fillStyle = "#007AF0";
+                ctx.fillText("Your Score: " + score,cw/2,ch/2 + 100);
+            }
+            
+            requestAnimationFrame(loop)
+        }
+        requestAnimationFrame(loop)
+	</script>
+
+
+</body></html>

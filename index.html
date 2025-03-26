@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  	<head>
+	    	<meta charset="UTF-8">
+	    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	    	<title>Micah Lyons - Project Library</title>
+	    	<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+        <center><div id="titleBlock">
+            <h1>Micah Lyons - Project Library</h1>
+            <h2>A collection of some of my HTML/JS/CSS projects</h2>
+        </div></center>
+        <br>
+        <center><div id="links">
+            <button onclick="window.location.href='Laser Game 2/main.html'" class="redirect">Laser Game</button>
+                <button onclick="document.getElementById('modal0').style.display = 'block';" class="info">?</button>
+                <div id="modal0" class="modal">
+                    <div class="modal-content">
+                        <span onclick="document.getElementById('modal0').style.display = 'none'" class="close">&times;</span>
+                        <p><b>Laser Game</b></p>
+                        <p>Click to fire your laser, destroying enemies and propelling you backward.</p>
+                    </div>
+                </div>
+            <button onclick="window.location.href='Space Game/Space Game.html'" class="redirect">Space Game</button>
+                <button onclick="document.getElementById('modal1').style.display = 'block';" class="info">?</button>
+                <div id="modal1" class="modal">
+                    <div class="modal-content">
+                        <span onclick="document.getElementById('modal1').style.display = 'none'" class="close">&times;</span>
+                        <p><b>Space Game</b></p>
+                        <p>Use A and D to move the shield around your planet and defend it from alien attackers.</p>
+                    </div>
+                </div>
+            <button onclick="window.location.href='Car Game/index.html'" class="redirect">Car Game</button>
+                <button onclick="document.getElementById('modal2').style.display = 'block';" class="info">?</button>
+                <div id="modal2" class="modal">
+                    <div class="modal-content">
+                        <span onclick="document.getElementById('modal2').style.display = 'none'" class="close">&times;</span>
+                        <p><b>Car Game</b></p>
+                        <p>Use A and D to steer the car around the track.</p>
+                    </div>
+                </div>
+            <button onclick="window.location.href='Volleyball Game/index.html'" class="redirect">Beach Volleyball</button>
+                <button onclick="document.getElementById('modal3').style.display = 'block';" class="info">?</button>
+                <div id="modal3" class="modal">
+                    <div class="modal-content">
+                        <span onclick="document.getElementById('modal3').style.display = 'none'" class="close">&times;</span>
+                        <p><b>Volleyball Game</b></p>
+                        <p>Use WASD and IJKL to control the players in a 2-player game of volleyball.</p>
+                    </div>
+                </div>
+            <button onclick="window.location.href='Plane Game/main.html'" class="redirect">Plane Game</button>
+                <button onclick="document.getElementById('modal4').style.display = 'block';" class="info">?</button>
+                <div id="modal4" class="modal">
+                    <div class="modal-content">
+                        <span onclick="document.getElementById('modal4').style.display = 'none'" class="close">&times;</span>
+                        <p><b>Plane Game</b></p>
+                        <p>Use A and D to steer your plane and explore the map.</p>
+                    </div>
+                </div>
+            <button onclick="window.location.href='Terrain Generation/main.html'" class="redirect">Terrain Generation</button>
+                <button onclick="document.getElementById('modal5').style.display = 'block';" class="info">?</button>
+                <div id="modal5" class="modal">
+                    <div class="modal-content">
+                        <span onclick="document.getElementById('modal5').style.display = 'none'" class="close">&times;</span>
+                        <p><b>Terrain Generation</b></p>
+                        <p>Generate random terrain based on a Perlin Noise engine developed by Stefan Gustavson.</p>
+                    </div>
+                </div>
+            
+
+            <script>
+                var boxes = document.getElementsByClassName("modal");
+                document.addEventListener('keydown', function(e) {
+                    if (e.key = 'Escape') {
+                        console.log('s')
+                        for (var i = 0; i < boxes.length; i++) {
+                            boxes[i].style.display = 'none';
+                        }
+                    }
+                })
+            </script>
+        </div></center>
+        <canvas id="background"></canvas>
+        <script src="script.js"></script>
+	</body>
+</html>

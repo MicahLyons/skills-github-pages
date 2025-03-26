@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Plane Game</title>
+        <style>
+            body {
+                margin: 0px;
+                background-color: black;
+            }
+            canvas {
+                background-color: dodgerblue;
+                /* background-color: rgb(0, 0, 71); */
+            }
+            #coords {
+                position: fixed;
+                top: 85vh;
+                left: 5vw;
+                color: white;
+                font-size: 30px;
+            }
+        </style>
+    </head>
+    <body>
+        <button onclick="window.location.href='../index.html'" style="width: 3vw; height: 3vw; background: #AEAEAE; border-radius: .5vw; border: 0px solid #AEAEAE; position: fixed; margin: 1vw; font-size:1vw;">&#x25c0</button>
+        <img hidden id="map" src="blankmap.svg">
+        <img hidden id="elevation_map" src="elevation.png">
+        <img hidden id="plane" src="plane.svg" width="250px" height="250px">
+        <audio hidden controls autoplay src="planeNoise.mp3"></audio>
+        <center>
+            <canvas id="canvas" width="4378" height="2435"></canvas>
+        </center>
+        <p id='coords'></p>
+        <script src="script.js"></script>
+    </body>
+</html>
