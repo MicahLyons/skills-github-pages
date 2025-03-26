@@ -1,8 +1,8 @@
 let cvs = document.getElementById('background');
 let ctx = cvs.getContext('2d')
 
-cvs.width = window.innerWidth; // adjust canvas proportions
-cvs.height = window.innerHeight;
+cvs.width = window.innerWidth*2; // adjust canvas proportions
+cvs.height = window.innerHeight*2;
 cvs.style.width = '100vw'; //shrink canvas to correct size
 cvs.style.height = '100vh';
 const cw = cvs.width
@@ -47,7 +47,7 @@ function loop() { // run this each frame
     {
         document.getElementById('titleBlock').style.border = '2px solid hsl('+hue+',100%,50%)';
         document.getElementById('links').style.border = '2px solid hsl('+hue+',100%,50%)';
-        var buttons = document.querySelectorAll('.redirect');
+        var buttons = document.querySelectorAll('button');
         for (var i = 0; i < buttons.length; i++) {
             buttons[i].style.border = '1px solid hsl('+hue+',100%,50%)'
         }

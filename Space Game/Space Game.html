@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-	<title>Page Title</title>
+	<title>Space Game</title>
 	<style>
 		body {
 			margin: 0px;
@@ -10,6 +10,9 @@
 		canvas {
 			background-color: #232323;
 			font-family: 'Orbitron', sans-serif;
+            position: fixed;
+            top: 0px;
+            left: 0px;
 		}
 	</style>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,16 +21,18 @@
 </head>
 
 <body>
-	<center><canvas id="canvas" width="750" height="750"></canvas></center>
+    <button onclick="window.location.href='../index.html'" style="width: 3vw; height: 3vw; background: #AEAEAE; border-radius: .5vw; border: 0px solid #AEAEAE; position: fixed; margin: 1vw; font-size:1vw; z-index: 10;">&#x25c0</button>
+	<center><canvas id="canvas"></canvas></center>
 	<script>
 		const cvs = document.getElementById('canvas');
         const ctx = cvs.getContext('2d');
         let gameRunning = true;
         let score = 0;
         
-     
-        cvs.style.width = '500px';
-        cvs.style.height = '500px';
+        cvs.width = window.innerWidth * 2
+        cvs.height = window.innerHeight * 2
+        cvs.style.width = '100vw';
+        cvs.style.height = '100vh';
         
         let cw = cvs.width;
         let ch = cvs.height;
@@ -164,7 +169,7 @@
             this.draw = function() {
                 ctx.beginPath();
                 ctx.fillStyle = 'rgba(100%,100%,100%,' + this.opacity + ')';
-                ctx.arc(this.x,this.y,1,0,tau);
+                ctx.arc(this.x,this.y,2,0,tau);
                 ctx.fill();
                 
                 this.opacity -= .01
@@ -184,7 +189,7 @@
         
         function loop() {
             ctx.clearRect(0,0,cw,ch);
-            if (stars.length <= 100 && Math.floor(Math.random() * 5) == 0) {
+            if (stars.length <= 150 && Math.floor(Math.random() * 5) == 0) {
                 var star_x = Math.random() * cw
                 var star_y = Math.random() * ch
                 var star_r = Math.random() * 2 + 1
@@ -230,8 +235,8 @@
                 //scoreboard,hp
                 ctx.font = "96px Orbitron";
                 ctx.fillStyle = "white";
-                ctx.textAlign = "left";
-                ctx.fillText(score,20,100);
+                ctx.textAlign = "center";
+                ctx.fillText(score,cw/2,100);
                 ctx.font = "24px Orbitron";
                 ctx.fillStyle = "#007AF0";
                 ctx.textAlign = "center";

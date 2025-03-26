@@ -2,7 +2,6 @@ body {
     font-family: Tahoma;
     color: white;
     padding: 20px;
-    
 }
 #background {
     background-color: black;
@@ -25,9 +24,18 @@ h2 {
     background-color: black;
     width: 460px;
     padding: 20px;
+    border-radius: 10px;
 }
 .redirect {
-    width: 400px;
+    width: 250px;
+    height: 50px;
+    margin: 20px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+}
+.info {
+    width: 50px;
     height: 50px;
     margin: 20px;
     background-color: black;
@@ -39,4 +47,44 @@ h2 {
 }
 .redirect:active {
     background-color: rgb(86, 86, 86);
+}
+.popup {
+    position: relative;
+    top: -75px;
+    left: 100px;
+    line-height: 3px;
+    padding: 10px;
+    border: 2px solid white;
+}
+.modal { 
+    display: none; 
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+    background-color: #fefefe;
+    color: black;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover, .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
 }

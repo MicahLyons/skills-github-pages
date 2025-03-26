@@ -12,9 +12,6 @@ const cw = 2400;
 const ch = 1500;
 
 let sound = {
-    // hit: document.getElementById("boing"),
-    // net: document.getElementById("boing"),
-    // groundBounce: document.getElementById("boing"),
     hit: document.getElementById("hit"),
     net: document.getElementById("net"),
     groundBounce: document.getElementById("groundBounce"),
@@ -31,7 +28,7 @@ let player1 = {
     height: 400,
     movementLR: [false,false],
     dy:0,
-    image: document.getElementById("blu_b1"),
+    image: document.getElementById("blu_srv"),
     draw: function() {
         ctx.drawImage(this.image,this.x,this.y-this.height,this.width,this.height)
         if (this.movementLR[0]) {this.x -= 18};
@@ -55,7 +52,7 @@ let player2 = {
     height: 400,
     movementLR: [false,false],
     dy:0,
-    image: document.getElementById("blu_b2"),
+    image: document.getElementById("blu_srv"),
     draw: function() {
         ctx.save();
         ctx.scale(-1, 1);
@@ -101,7 +98,11 @@ let ball = {
             this.dead = true;
             this.bounces += 1
             if (this.bounces >= 4) {
-                resetBall(1)
+                if (this.x > cw/2) {
+                    resetBall(1)
+                } else {
+                    resetBall(2)
+                }
             }
         }
 

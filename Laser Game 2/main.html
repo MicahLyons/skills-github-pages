@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap" rel="stylesheet">
+    <title>Laser Game 2</title>
+    <style>
+      body {
+        margin: 0px;
+      }
+      canvas {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        background: #000000;
+        font-family: 'Silkscreen', sans-serif;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <button onclick="window.location.href='../index.html'" style="width: 3vw; height: 3vw; background: #AEAEAE; border-radius: .5vw; border: 0px solid #AEAEAE; position: fixed; margin: 1vw; z-index:10; font-size:1vw;">&#x25c0</button>
+    <!-- Enemies and player -->
+    <img hidden id="playerIcon" src="Assets/player.png" width="150px" height="150px">
+    <img hidden id="gradGreen" src="Assets/gradient-green.svg" width="250px" height="250px">
+    <img hidden id="enemyIcon" src="Assets/enemy.png" width="125px" height="125px">
+    <img hidden id="gradRed" src="Assets/gradient-red.svg" width="250px" height="250px">
+    <!-- Planets -->
+    <img hidden class="planet" src="Assets/cloudy.png" width="1850px" height="1850px"></img>
+    <img hidden class="planet" src="Assets/gas.png" width="1850px" height="1850px"></img>
+    <img hidden class="planet" src="Assets/ice.png" width="1700px" height="1700px"></img>
+    <img hidden class="planet" src="Assets/mars.png" width="1700px" height="1700px"></img>
+    <img hidden class="planet" src="Assets/purple.png" width="1700px" height="1700px"></img>
+    <img hidden class="planet" src="Assets/rock.png" width="1550px" height="1550px"></img>
+    <!-- Asteroids -->
+    <img hidden class="asteroid" src="Assets/Asteroid1.png" width="250px" height="250px"></img>
+    <img hidden class="asteroid" src="Assets/Asteroid2.png" width="250px" height="250px"></img>
+    <img hidden class="asteroid" src="Assets/Asteroid3.png" width="250px" height="250px"></img>
+    <img hidden class="asteroid" src="Assets/Asteroid4.png" width="250px" height="250px"></img>
+
+    <canvas id="cvs"></canvas>
+	  <script src="script.js"></script>
+  </body>
+</html>

@@ -84,33 +84,6 @@ function draw() {
     }
   }
 }
-function moveLeft() { // pan left
-  // for (var y = 0; y < ch; y++) { // run from top to bottom
-  //   for (var x = cw; x > 0; x--) { // run from left to right
-  //     console.log(map[y][x].elevation) 
-  //     console.log(map[y][x-1].elevation); // set elevation equal to that of pixel to the left
-  //   }
-  // }
-  draw();
-}
-function moveRight() { // pan right
-  
-}
-function moveUp() { // pan up
-  
-}
-function moveDown() { // pan down
-  
-}
-
-document.addEventListener('keydown', function(e) {
-  if (e.key == 'a') {
-    moveLeft();
-  }
-});
-document.addEventListener('keyup', function(e) {
-  
-});
 
 noiseGen()
 draw()
